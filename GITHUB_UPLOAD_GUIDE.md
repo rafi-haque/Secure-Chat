@@ -107,6 +107,9 @@ Before pushing, make sure:
 
 ### **Push Rejected Error** (remote has content you don't have locally):
 ```bash
+# Configure Git to use merge strategy (run once)
+git config pull.rebase false
+
 # Pull the remote changes and merge
 git pull origin main --allow-unrelated-histories
 
