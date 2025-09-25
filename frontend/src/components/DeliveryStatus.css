@@ -1,0 +1,55 @@
+.delivery-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.status-icon {
+  font-size: 0.8rem;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.delivery-status.sending .status-icon {
+  animation: pulse 1.5s infinite;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.delivery-status.sent .status-icon {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.delivery-status.delivered .status-icon {
+  color: #10b981;
+  font-weight: bold;
+}
+
+.delivery-status.failed .status-icon {
+  color: #ef4444;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
