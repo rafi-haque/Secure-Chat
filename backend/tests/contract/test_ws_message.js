@@ -99,9 +99,9 @@ describe('WebSocket Messaging Contract Tests', () => {
           receiverSocket.on('message', (message) => {
             try {
               expect(message).toHaveProperty('from', 'sender');
-              expect(message).toHaveProperty('encryptedContent', 'encrypted-message-content');
+              expect(message).toHaveProperty('content', 'encrypted-message-content');
               expect(message).toHaveProperty('timestamp');
-              expect(message).toHaveProperty('messageId');
+              expect(message).toHaveProperty('id');
               done();
             } catch (error) {
               done(error);

@@ -227,7 +227,7 @@ describe('WebSocket Performance Tests', () => {
           
           expect(latency).toBeLessThan(PERFORMANCE_THRESHOLDS.MESSAGE_LATENCY);
           expect(data.from).toBe(testUsers[0].username);
-          expect(data.encryptedContent).toBe(testMessage.encryptedContent);
+          expect(data.content).toBe(testMessage.encryptedContent);
           
           resolve();
         });

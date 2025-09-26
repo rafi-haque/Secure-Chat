@@ -11,10 +11,7 @@ async function debugUserService() {
   const mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  await mongoose.connect(mongoUri);
 
   try {
     console.log('Testing user service...');

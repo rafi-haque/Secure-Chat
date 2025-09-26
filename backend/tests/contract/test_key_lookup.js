@@ -15,10 +15,7 @@ describe('Public Key Lookup API Contract Tests', () => {
     process.env.NODE_ENV = 'test';
     process.env.MONGODB_URI = mongoUri;
     
-    await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(mongoUri);
 
     // Import app after database is connected
     const serverModule = require('../../src/server');

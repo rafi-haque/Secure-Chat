@@ -69,7 +69,6 @@ messageSchema.pre('save', function(next) {
 // Indexes for performance
 messageSchema.index({ sender: 1, timestamp: -1 });
 messageSchema.index({ recipient: 1, timestamp: -1 });
-messageSchema.index({ messageId: 1 });
 messageSchema.index({ room: 1, timestamp: -1 });
 
 // Method to mark as delivered
