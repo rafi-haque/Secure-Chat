@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Register from './components/Register';
 import UserSearch from './components/UserSearch';
-import ChatWindow from './components/ChatWindow';
+import ChatManager from './components/ChatManager';
 import { loadKeys } from './lib/crypto';
 import './App.css';
 
@@ -10,12 +10,17 @@ interface ChatUser {
   publicKey: string;
 }
 
+interface ActiveChat {
+  user: ChatUser;
+  id: string;
+}
+
 function App() {
   const [currentUser, setCurrentUser] = useState<string>('');
   const [isRegistered, setIsRegistered] = useState(false);
   const [privateKey, setPrivateKey] = useState<CryptoKey | undefined>();
-  const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
-  const [currentView, setCurrentView] = useState<'register' | 'search' | 'chat'>('register');
+  const [activeChats, setActiveChats] = useState<ActiveChat[]>([]);
+  const [currentView, setCurrentView] = useState<'register' | 'search'>('register');
 
   // Check for existing registration on app load
   useEffect(() => {
@@ -56,16 +61,25 @@ function App() {
 
   const handleUserSelect = (user: { username: string; publicKey?: string }) => {
     if (user.publicKey) {
-      setSelectedUser({ username: user.username, publicKey: user.publicKey });
-      setCurrentView('chat');
+      // Check if chat with this user is already open
+      const existingChat = activeChats.find(chat => chat.user.username === user.username);
+      
+      if (!existingChat) {
+        // Create a new chat
+        const newChat: ActiveChat = {
+          user: { username: user.username, publicKey: user.publicKey },
+          id: `chat-${user.username}-${Date.now()}`
+        };
+        
+        setActiveChats(prev => [...prev, newChat]);
+      }
     } else {
       console.error('Cannot start chat: user public key not available');
     }
   };
 
-  const handleBackToSearch = () => {
-    setSelectedUser(null);
-    setCurrentView('search');
+  const handleCloseChat = (chatId: string) => {
+    setActiveChats(prev => prev.filter(chat => chat.id !== chatId));
   };
 
   const handleLogout = async () => {
@@ -83,7 +97,7 @@ function App() {
       setCurrentUser('');
       setIsRegistered(false);
       setPrivateKey(undefined);
-      setSelectedUser(null);
+      setActiveChats([]);
       setCurrentView('register');
       
       console.log('Logout successful - all data cleared');
@@ -93,7 +107,7 @@ function App() {
       setCurrentUser('');
       setIsRegistered(false);
       setPrivateKey(undefined);
-      setSelectedUser(null);
+      setActiveChats([]);
       setCurrentView('register');
       localStorage.removeItem('username');
     }
@@ -124,16 +138,17 @@ function App() {
             currentUsername={currentUser}
           />
         )}
-
-        {currentView === 'chat' && selectedUser && (
-          <ChatWindow
-            currentUser={currentUser}
-            chatUser={selectedUser}
-            privateKey={privateKey}
-            onClose={handleBackToSearch}
-          />
-        )}
       </main>
+
+      {/* Chat bubbles are rendered outside main to be positioned fixed */}
+      {isRegistered && (
+        <ChatManager
+          currentUser={currentUser}
+          privateKey={privateKey}
+          activeChats={activeChats}
+          onCloseChat={handleCloseChat}
+        />
+      )}
 
       <footer className="app-footer">
         <p>End-to-end encrypted messaging • Your messages are secure</p>
